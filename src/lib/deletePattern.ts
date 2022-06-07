@@ -1,5 +1,5 @@
-import {Redis} from 'ioredis'
-import {processStream} from './processStream'
+import { Redis } from 'ioredis'
+import { processStream } from './processStream'
 
 const DEFAULT_SCAN_CHUNK_SIZE = 1000
 
@@ -11,7 +11,7 @@ export const unlinkPattern = (
 ) =>
   processStream(
     redis,
-    redis.scanStream({count: scanBatchSize, match: pattern}),
+    redis.scanStream({ count: scanBatchSize, match: pattern }),
     {
       filterKeys,
       pipelineFn: (pipeline, ...keys) => pipeline.unlink(...keys),
@@ -26,7 +26,7 @@ export const deletePattern = (
 ) =>
   processStream(
     redis,
-    redis.scanStream({count: scanBatchSize, match: pattern}),
+    redis.scanStream({ count: scanBatchSize, match: pattern }),
     {
       filterKeys,
       pipelineFn: (pipeline, ...keys) => pipeline.del(...keys),

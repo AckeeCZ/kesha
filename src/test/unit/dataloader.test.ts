@@ -76,7 +76,7 @@ describe('Dataloader factory', () => {
 
     expect(await client.get('test:1')).toBe(JSON.stringify(await loadOne(1)))
     await new Promise(resolve => setTimeout(resolve, TTL_TEST * 1000))
-    expect(await client.get(`test:1`)).toBeNull()
+    expect(await client.get('test:1')).toBeNull()
   })
 
   test('Capped dataloader is checking batch calls', async () => {

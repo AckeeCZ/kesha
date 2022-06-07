@@ -1,4 +1,4 @@
-import {Redis} from 'ioredis'
+import { Redis } from 'ioredis'
 
 /**
  * Process readable Redis stream with a promise
@@ -44,5 +44,5 @@ export const processStream = async (
     stream.on('error', reject)
   })
 
-  return {keysCount, receivedBatches, pipelinesCount: pipelines.length}
+  return { keysCount, receivedBatches, pipelinesCount: pipelines.length }
 }

@@ -1,10 +1,10 @@
-import {createRedisRepository} from '../../index'
-import {getClient} from '../client'
+import { createRedisRepository } from '../../index'
+import { getClient } from '../client'
 
 describe('Redis repository', () => {
   const client = getClient()
   const TEST_KEY = 'test-key'
-  const TEST_OBJECT = {test: 'test'}
+  const TEST_OBJECT = { test: 'test' }
 
   it('Create redis repository', async () => {
     const repository = createRedisRepository(client)

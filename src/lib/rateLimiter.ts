@@ -1,4 +1,4 @@
-import {Redis} from 'ioredis'
+import { Redis } from 'ioredis'
 
 /**
  * Limits a rate of calls for given function in the given time interval
@@ -33,8 +33,8 @@ export const rateLimiter = <T extends (...args: any[]) => any>(
       intervalMs
     )) as number
     if (calls <= limit) {
-      return {called: true, returnValue: await fn(...args)}
+      return { called: true, returnValue: await fn(...args) }
     }
-    return {called: false}
+    return { called: false }
   }
 }

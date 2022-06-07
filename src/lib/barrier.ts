@@ -1,5 +1,5 @@
-import {KeyGenerator} from './types'
-import {createKeyGen} from './utils'
+import { KeyGenerator } from './types'
+import { createKeyGen } from './utils'
 
 /**
  * Registers function call under some key. All future function calls with the same key
