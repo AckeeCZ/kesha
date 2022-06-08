@@ -1,7 +1,7 @@
 {
   "name": "@ackee/kesha",
   "description": "Caching utils based on ioredis and dataloaders",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": "Pavel Švagr <s.pavel66@gmail.com>",
   "contributors": [
     "Pavel Švagr <s.pavel66@gmail.com>",
