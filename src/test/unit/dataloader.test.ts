@@ -1,10 +1,5 @@
-import {
-  createDataLoaderFactory,
-  deletePattern,
-  RedisDataLoader,
-} from '../../index'
+import { createDataLoaderFactory, deletePattern } from '../../index'
 import { getClient } from '../client'
-import { DataLoaderType } from '../../lib/dataloaders'
 
 describe('Dataloader factory', () => {
   const client = getClient()
@@ -16,7 +11,6 @@ describe('Dataloader factory', () => {
   }
 
   const TTL_TEST = 2
-  const CAP_LIMIT = 1
 
   const database: TestData[] = Array.from(Array(20), (_, index) => ({
     id: index + 1,
@@ -33,18 +27,8 @@ describe('Dataloader factory', () => {
   }
 
   const createDataLoader = createDataLoaderFactory(client)
-  const createCappedDataLoader = createDataLoaderFactory(client, {
-    type: DataLoaderType.Capped,
-    capLimit: CAP_LIMIT,
-  })
 
   const dataloader = createDataLoader(loadMore, {
-    keyPrefix: 'test',
-    ttlSeconds: TTL_TEST,
-    idAttribute: 'id',
-  })
-
-  const cappedDataloader = createCappedDataLoader(loadMore, {
     keyPrefix: 'test',
     ttlSeconds: TTL_TEST,
     idAttribute: 'id',
@@ -60,10 +44,6 @@ describe('Dataloader factory', () => {
       name: 'Base dataloader',
       dataloader: dataloader,
     },
-    {
-      name: 'Capped dataloader',
-      dataloader: cappedDataloader,
-    },
   ])('Data are cached: $name', async ({ dataloader }) => {
     expect(await dataloader.load(1)).toEqual(await loadOne(1)) // first call
     await dataloader.load(1) // second call
@@ -77,20 +57,5 @@ describe('Dataloader factory', () => {
     expect(await client.get('test:1')).toBe(JSON.stringify(await loadOne(1)))
     await new Promise(resolve => setTimeout(resolve, TTL_TEST * 1000))
     expect(await client.get('test:1')).toBeNull()
-  })
-
-  test('Capped dataloader is checking batch calls', async () => {
-    const callLoadXTimes = (loader: RedisDataLoader<any, any>, x: number) =>
-      Array.from(Array(x), (_, index) => loader.load(index + 1))
-
-    await Promise.all(callLoadXTimes(dataloader, CAP_LIMIT * 4))
-    expect(callCounter).toEqual(1)
-    callCounter = 0
-
-    await deletePattern(client, '*')
-
-    await Promise.all(callLoadXTimes(cappedDataloader, CAP_LIMIT * 4))
-    expect(callCounter).toBeGreaterThan(1)
-    callCounter = 0
   })
 })
