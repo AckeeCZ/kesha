@@ -2,11 +2,6 @@ import { Redis } from 'ioredis'
 import * as redisDataLoaderFactory from 'redis-dataloader'
 import * as DataLoader from 'dataloader'
 
-export enum DataLoaderType {
-  Capped = 'capped',
-  Base = 'base',
-}
-
 export interface RedisDataLoaderOptions<K extends string = string> {
   idAttribute: K
   /** Final key is `<keyPrefix>:<entityId>` */
@@ -24,7 +19,6 @@ export interface RedisDataLoader<K, V> {
 /**
  * Creates factory for Redis Dataloaders with simplified interface
  * @param redis
- * @param options Defines type of Dataloader class which will be used
  */
 export const createDataLoaderFactory = (redis: Redis) => {
   const RedisDataLoader = redisDataLoaderFactory({ redis })
