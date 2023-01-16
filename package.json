@@ -23,7 +23,8 @@
   "keywords": [],
   "scripts": {
     "build": "tsc",
-    "test": "jest --colors --forceExit --runInBand"
+    "test": "jest --colors --forceExit --runInBand",
+    "lint": "eslint '**/*.ts' -f codeframe"
   },
   "dependencies": {
     "dataloader": "^2.1.0",
@@ -31,7 +32,7 @@
     "redis-dataloader": "^1.0.2"
   },
   "devDependencies": {
-    "@ackee/styleguide-backend-config": "^0.2.2",
+    "@ackee/styleguide-backend-config": "^0.3.13",
     "@types/jest": "^27.4.1",
     "husky": "^4.2.3",
     "jest": "^27.2.0",
