@@ -16,7 +16,9 @@ const curryFirst =
   (...args: A) =>
     fn(client, ...args)
 
-export const createRedisRepository = <M>(redis: Redis) => ({
+export const createRedisRepository = <M extends Record<string, any>>(
+  redis: Redis
+) => ({
   client: redis,
   cacheize: curryFirst(cacheize)(redis),
   set: curryFirst(set)(redis),

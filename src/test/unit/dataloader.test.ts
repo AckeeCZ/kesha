@@ -42,7 +42,7 @@ describe('Dataloader factory', () => {
   test.each([
     {
       name: 'Base dataloader',
-      dataloader: dataloader,
+      dataloader,
     },
   ])('Data are cached: $name', async ({ dataloader }) => {
     expect(await dataloader.load(1)).toEqual(await loadOne(1)) // first call
