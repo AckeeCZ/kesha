@@ -35,7 +35,7 @@ import {createRedisRepository} from 'kesha';
 
 const repo = createRedisRepository(client)
 
-const rateLimitedFn = rrepo.rateLimiter((number: number) => {
+const rateLimitedFn = repo.rateLimiter((number: number) => {
   console.log('Called')
 }, '', 1000)
 ```
