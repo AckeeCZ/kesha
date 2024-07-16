@@ -1,7 +1,7 @@
 {
   "name": "@ackee/kesha",
   "description": "Caching utils based on ioredis and dataloaders",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "Pavel Švagr <s.pavel66@gmail.com>",
   "contributors": [
     "Pavel Švagr <s.pavel66@gmail.com>",
@@ -20,7 +20,12 @@
     "node": ">=18"
   },
   "license": "MIT",
-  "keywords": ["cache", "redis", "dataloader", "utils"],
+  "keywords": [
+    "cache",
+    "redis",
+    "dataloader",
+    "utils"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest --colors --forceExit --runInBand",
