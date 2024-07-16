@@ -25,24 +25,24 @@ export const set = (
   return redis.set(key, data, ...args)
 }
 
-export const setJSON = <M, K extends string = string>(
+export const setJSON = <Obj, Key extends string = string>(
   redis: Redis,
-  key: K,
-  data: K extends keyof M ? M[K] : any,
+  key: Key,
+  data: Key extends keyof Obj ? Obj[Key] : any,
   options?: SetMethodOptions
 ) => set(redis, key, JSON.stringify(data), options)
 
 export const getJSON = async <
-  M extends Record<string, any> = any,
-  K extends string = string
+  Obj extends Record<string, any> = any,
+  Key extends string = string
 >(
   redis: Redis,
-  key: K
-): Promise<(K extends keyof M ? M[K] : any) | null> => {
+  key: Key
+): Promise<(Key extends keyof Obj ? Obj[Key] : any) | null> => {
   const data = await redis.get(key)
   return data ? JSON.parse(data) : null
 }
 
-export const createKeyGen = <A extends any[], Key extends KeyGenerator<A, any>>(
+export const createKeyGen = <Args extends any[], Key extends KeyGenerator<Args, any>>(
   key: Key | string
-) => (typeof key === 'string' ? (..._: A) => key : key)
+) => (typeof key === 'string' ? (..._: Args) => key : key)

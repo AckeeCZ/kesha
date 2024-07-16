@@ -9,29 +9,29 @@ import { ClearMethods, KeyGenerator } from './types'
  * @param key Where to store final result
  * @param options - Options for set and clear method
  */
-export const cacheize = <T extends Record<string, any>, A extends any[]>(
+export const cacheize = <Result extends Record<string, any>, Args extends any[]>(
   redis: Redis,
-  fn: (...args: A) => Promise<T>,
-  key: string | KeyGenerator<A>,
+  fn: (...args: Args) => Promise<Result>,
+  key: string | KeyGenerator<Args>,
   options?: SetMethodOptions & { clearMethod: ClearMethods }
 ) => {
   const getKey = createKeyGen(key)
 
-  const forceWrite = (...args: A) =>
+  const forceWrite = (...args: Args) =>
     fn(...args).then(async result => {
       await setJSON(redis, getKey(...args), result, options)
       return result
     })
 
-  const clear = (...args: A) =>
+  const clear = (...args: Args) =>
     options?.clearMethod === ClearMethods.Delete
       ? redis.del(getKey(...args))
       : redis.unlink(getKey(...args))
 
   return Object.assign(
-    async (...args: A) => {
+    async (...args: Args) => {
       const cached = await getJSON(redis, getKey(...args))
-      if (cached) return cached as T
+      if (cached) return cached as Result
       return forceWrite(...args)
     },
     { clear, prime: forceWrite }

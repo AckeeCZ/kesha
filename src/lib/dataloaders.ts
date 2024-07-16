@@ -2,18 +2,18 @@ import { Redis } from 'ioredis'
 import * as redisDataLoaderFactory from 'redis-dataloader'
 import * as DataLoader from 'dataloader'
 
-export interface RedisDataLoaderOptions<K extends string = string> {
-  idAttribute: K
+export interface RedisDataLoaderOptions<Key extends string = string> {
+  idAttribute: Key
   /** Final key is `<keyPrefix>:<entityId>` */
   keyPrefix: string
   ttlSeconds: null | number
 }
 
-export interface RedisDataLoader<K, V> {
-  load: (key: K) => Promise<V | null>
-  loadMany: (keys: ArrayLike<K>) => Promise<Array<V | Error | null>>
-  prime: (key: K, value: V | Error) => Promise<void>
-  clearMany: (keys: K[]) => Promise<void>
+export interface RedisDataLoader<Key, Value> {
+  load: (key: Key) => Promise<Value | null>
+  loadMany: (keys: ArrayLike<Key>) => Promise<Array<Value | Error | null>>
+  prime: (key: Key, value: Value | Error) => Promise<void>
+  clearMany: (keys: Key[]) => Promise<void>
 }
 
 /**
@@ -23,17 +23,17 @@ export interface RedisDataLoader<K, V> {
 export const createDataLoaderFactory = (redis: Redis) => {
   const RedisDataLoader = redisDataLoaderFactory({ redis })
 
-  return <T, K extends string & keyof T>(
-    fetch: (keys: Readonly<Array<T[K]>>) => Promise<T[]>,
-    options: RedisDataLoaderOptions<K>
-  ): RedisDataLoader<T[K], T> => {
+  return <T, Key extends string & keyof T>(
+    fetch: (keys: Readonly<Array<T[Key]>>) => Promise<T[]>,
+    options: RedisDataLoaderOptions<Key>
+  ): RedisDataLoader<T[Key], T> => {
     const loader = new RedisDataLoader(
       options.keyPrefix,
       new DataLoader(
-        async (ids: Readonly<Array<T[K]>>) => {
+        async (ids: Readonly<Array<T[Key]>>) => {
           const items = await fetch(ids)
           return ids.map(
-            (id: T[K]) => items.find(a => a[options.idAttribute] === id) ?? null
+            (id: T[Key]) => items.find(a => a[options.idAttribute] === id) ?? null
           )
         },
         {
@@ -46,10 +46,10 @@ export const createDataLoaderFactory = (redis: Redis) => {
       }
     )
     return Object.assign(loader, {
-      clearMany: async (keys: Array<T[K]>) => {
+      clearMany: async (keys: Array<T[Key]>) => {
         void Promise.all(keys.map(k => loader.clear(k)))
         await new Promise(setImmediate)
       },
-    }) as RedisDataLoader<T[K], T>
+    }) as RedisDataLoader<T[Key], T>
   }
 }

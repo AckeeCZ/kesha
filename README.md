@@ -1,5 +1,7 @@
 <div align="center">
 
+![](logo.png)
+
 # Kesha
 
 Caching utils based on [ioredis](https://www.npmjs.com/package/ioredis)
@@ -18,24 +20,24 @@ const redisClient = new Redis({
 })
 ```
 
-- Use exported utils directly
+- Use exported utils directly f.e. [rateLimiter](src/lib/rateLimiter.ts)
 
 ```typescript
-import {rateLimiter} from 'kesha';
+import { rateLimiter } from 'kesha';
 
 const rateLimitedFn = rateLimiter(redisClient, (number: number) => {
   console.log('Called')
 }, '', 1000)
 ```
 
-- Use one client
+- or create set of utils for client with [createRedisRepository](src/lib/redisRepository.ts)
 
 ```typescript
-import {createRedisRepository} from 'kesha';
+import { createRedisRepository } from 'kesha';
 
 const repo = createRedisRepository(client)
 
-const rateLimitedFn = rrepo.rateLimiter((number: number) => {
+const rateLimitedFn = repo.rateLimiter((number: number) => {
   console.log('Called')
 }, '', 1000)
 ```
