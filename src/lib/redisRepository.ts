@@ -11,9 +11,9 @@ import { createDataLoaderFactory } from './dataloaders'
 import { rateLimiter } from './rateLimiter'
 
 const curryFirst =
-  <A extends any[], R>(fn: (client: Redis, ...args: A) => R) =>
+  <Args extends any[], Result>(fn: (client: Redis, ...args: Args) => Result) =>
   (client: Redis) =>
-  (...args: A) =>
+  (...args: Args) =>
     fn(client, ...args)
 
 export const createRedisRepository = <M extends Record<string, any>>(

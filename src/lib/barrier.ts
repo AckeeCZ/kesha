@@ -7,18 +7,20 @@ import { createKeyGen } from './utils'
  * @param fn Function call
  * @param key Unique key for fn or key generator from function argument
  */
-export const barrier = <T, A extends any[]>(
-  fn: (...args: A) => Promise<T>,
-  key: KeyGenerator<A, string | undefined> | string
+export const barrier = <Result, Args extends any[]>(
+  fn: (...args: Args) => Promise<Result>,
+  key: KeyGenerator<Args, string | undefined> | string
 ) => {
   const getKey = createKeyGen(key)
 
-  const memory = new Map<string, Promise<T>>()
+  const memory = new Map<string, Promise<Result>>()
 
-  return (...args: A) => {
+  return (...args: Args) => {
     const key = getKey(...args)
 
-    if (key === undefined) return fn(...args)
+    if (key === undefined) {
+      return fn(...args)
+    }
 
     if (!memory.has(key)) {
       memory.set(

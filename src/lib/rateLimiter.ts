@@ -9,16 +9,16 @@ import { Redis } from 'ioredis'
  * @param intervalMs in milliseconds - Interval
  * @param limit - How many calls per interval are allowed
  */
-export const rateLimiter = <T extends (...args: any[]) => any>(
+export const rateLimiter = <Fn extends (...args: any[]) => any>(
   redis: Redis,
-  fn: T,
+  fn: Fn,
   key: string,
   intervalMs: number,
   limit = 1
 ): ((
-  ...args: Parameters<T>
-) => Promise<{ called: boolean; returnValue?: ReturnType<T> }>) => {
-  return async (...args: Parameters<T>) => {
+  ...args: Parameters<Fn>
+) => Promise<{ called: boolean; returnValue?: ReturnType<Fn> }>) => {
+  return async (...args: Parameters<Fn>) => {
     const calls = (await redis.eval(
       `
         local current
